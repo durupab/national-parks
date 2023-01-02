@@ -1,0 +1,112 @@
+package proje2;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class main {
+	public static void main(String args[]) {
+		List<milliPark> list1 = new ArrayList<milliPark>();
+		List<milliPark> list2 = new ArrayList<milliPark>();
+		List<milliPark>[] array = new List[2];
+
+		String dosya = "C:\\Users\\durup\\Desktop\\05200000027_DuruPabuþçu\\park.txt";
+        Scanner fileIn = null;
+       
+        try {
+            fileIn = new Scanner(new FileInputStream(dosya));
+        }
+        catch(FileNotFoundException e) {
+            System.out.println("Dosya okunamadý.");
+            System.exit(0);
+        }
+        
+    	String parkadi ;
+    	String il;
+    	String yil;
+    	Double yuzOlcumu;
+    	Double total1 = 0.0;
+    	Double total2 = 0.0;
+    	
+    	Stack stack1 = new Stack(48);
+    	MyQueue queue1 = new MyQueue(48);
+    	PriorityQueues pq1 = new PriorityQueues(48);
+    	
+    	fileIn.useDelimiter(",");
+    	while (fileIn.hasNext()) { //dosyadan okuma
+	    	 parkadi = fileIn.next();
+	    	 il = fileIn.next();
+	    	 yuzOlcumu = fileIn.nextDouble();
+	    	 yil = fileIn.next();
+	    	 fileIn.nextLine();
+	    	 milliPark park = new milliPark(parkadi,il,yil,yuzOlcumu);
+	    	 
+	    	if(park.getYuz_Olcumu() < 15000) {
+	    		list1.add(park);
+	    		total1 += yuzOlcumu;
+	    	}
+	    	else{
+	    		list2.add(park);
+	    		total2+= yuzOlcumu;
+	    	}  	
+	    	stack1.push(park);
+	    	queue1.insert(park);
+	    	pq1.insert(park);
+    	}
+    	// soru 1
+    	System.out.println("Yuz olcumu 15000den kucuk olanlar"+ "\n");
+    	array[0] = list1;
+    	System.out.println(array[0]);
+    	System.out.println("Yuz olcumu 15000den kucuk olanlarýn yuz olcumu toplamý: "+ total1+ "\n");
+    	System.out.println("Yuz olcumu 15000den buyuk olanlar"+ "\n");
+    	array[1] = list2;
+    	System.out.println(array[1]);
+    	System.out.println("Yuz olcumu 15000den buyuk olanlarýn yuz olcumu toplamý: " +total2+ "\n");
+    	
+    	// soru 2.a
+    	System.out.println("2.A ) Stack sýnýfý ile remove + print" + "\n");
+    	for(int i = 0; i<48;i++) {
+    		System.out.println(stack1.peek());
+    		stack1.pop();
+    	}
+    	System.out.println("2.B ) Queue sýnýfý ile remove + print"+ "\n");
+    	for(int i = 0; i<48;i++) {
+    		System.out.println(queue1.remove());
+    	}
+    	
+    	//soru3
+    	System.out.println("3 ) PQ sýnýfý ile remove + print" + "\n");
+    	for(int i = 0; i<48;i++) {
+    		System.out.println(pq1.remove());
+    	}
+
+    	System.out.println("\n 4 ) Ýþlem Tamamlama Sürelerinin Bulunmasý:\n");
+    	Double avarageTime = 0.0, avarageTimePQ = 0.0;
+    	int totalTime = 0,time = 0,timePQ = 0,totaltimePQ = 0;
+        int[] sira = {8, 9, 6, 7, 10, 1, 11, 5, 3, 4, 2 };
+        Queue<Integer> kuyruk = new PriorityQueue<Integer>() ; 
+        for(int i = 0; i< sira.length;i++) {
+        	 time += sira[i]*3;
+        	 kuyruk.add(sira[i]);
+        	 totalTime += time;
+        	 System.out.println((i+1 )+". kiþi "+time);
+        	 
+        }
+        avarageTime = (double) (totalTime/sira.length );
+        System.out.println("Q için "+avarageTime);
+        Pq2 oncelikliKuyruk = new Pq2(sira.length);
+        oncelikliKuyruk.insert(sira);
+        for(int i = 0; i< sira.length;i++) {
+        	timePQ += oncelikliKuyruk.kasa[i]*3;
+        	totaltimePQ += timePQ;
+        	System.out.println((i+1 )+". kiþi "+ timePQ);
+       }
+       avarageTimePQ = (double) (totaltimePQ/sira.length );
+       System.out.println("PQ için "+avarageTimePQ);
+                  
+	}
+}
